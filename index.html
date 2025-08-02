@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CORS Subdomain Test</title>
+</head>
+<body>
+  <h1>CORS Test on Subdomain</h1>
+  <button id="fetchBtn">Fetch Data from Target API</button>
+  <pre id="output" style="white-space: pre-wrap; border: 1px solid #ccc; padding: 10px; margin-top: 10px;"></pre>
+
+  <script>
+    document.getElementById('fetchBtn').addEventListener('click', () => {
+      fetch('https://lahanparagon.edu.np/wp-json/oembed/1.0/embed', {
+        method: 'GET',
+        credentials: 'include' // Sends cookies/session info with the request
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok: ' + response.status);
+        return response.text(); // Use .json() if you expect JSON response
+      })
+      .then(data => {
+        document.getElementById('output').textContent = 'Success! Data received:\n\n' + data;
+      })
+      .catch(error => {
+        document.getElementById('output').textContent = 'Error: ' + error.message;
+      });
+    });
+  </script>
+</body>
+</html>
