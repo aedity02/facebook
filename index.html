@@ -1,24 +1,38 @@
-fetch('https://lahanparagon.edu.np/wp-json/wp/v2/pages/271', {
-  method: 'POST',
-  credentials: 'include',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    title: 'About Apple',
-    content: '<h1>Apple Inc. is a global leader in technology and innovation.</h1>',
-    status: 'publish'
-  })
-})
-.then(response => {
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-  return response.json();
-})
-.then(data => {
-  console.log('✅ Page updated successfully:', data);
-})
-.catch(error => {
-  console.error('❌ Error updating page:', error);
-});
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Apple Page Update Test</title>
+</head>
+<body>
+  <h2>Updating WordPress Page...</h2>
+  <pre id="result" style="background: #eee; padding: 10px;"></pre>
+
+  <script>
+    fetch('https://lahanparagon.edu.np/wp-json/wp/v2/pages/271', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        title: 'About Apple',
+        content: '<h1>Apple Inc. is a global leader in technology and innovation.</h1>',
+        status: 'publish'
+      })
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      document.getElementById('result').textContent = '✅ Page updated successfully:\n\n' + JSON.stringify(data, null, 2);
+    })
+    .catch(error => {
+      document.getElementById('result').textContent = '❌ Error updating page:\n\n' + error.message;
+    });
+  </script>
+</body>
+</html>
