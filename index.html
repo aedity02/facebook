@@ -1,50 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>WordPress Page Content</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
-    h1 {
-      color: #333;
-    }
-    .content {
-      margin-top: 1rem;
-      line-height: 1.6;
-    }
-  </style>
-</head>
-<body>
-  <h1 id="page-title">Loading title...</h1>
-  <div id="page-content" class="content">Loading content...</div>
-
-  <script>
-    const pageId = 271; // Change this to the page ID you want to fetch
-    const apiUrl = `https://lahanparagon.edu.np/wp-json/wp/v2/pages/${pageId}`;
-
-    fetch(apiUrl)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(page => {
-        // Insert the title and content into the page
-        document.getElementById('page-title').innerHTML = page.title.rendered;
-        document.getElementById('page-content').innerHTML = page.content.rendered;
-      })
-      .catch(error => {
-        document.getElementById('page-title').textContent = 'Failed to load page';
-        document.getElementById('page-content').textContent = error.message;
-        console.error('Error fetching page:', error);
-      });
-  </script>
-</body>
+<html>
+  <head><title>Clickjacking Test</title></head>
+  <body>
+    <h1>If you see your site below, it's vulnerable to clickjacking</h1>
+    <iframe src="https://nepal.gov.np/" width="1000" height="700" style="opacity: 0.9;"></iframe>
+  </body>
 </html>
